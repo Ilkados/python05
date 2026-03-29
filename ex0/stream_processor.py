@@ -35,9 +35,9 @@ class NumericProcessor(DataProcessor):
                 if not self.validate(data):
                       raise ValueError("NumericProcessor expects a list of int or float values. ")
                 
-                numbers: List[NumericValue] = data
+                numbers: list[NumericValue] = data
 
-                total: Union[int, float]= sum(numbers)
+                total: NumericValue = sum(numbers)
                 average: float =  float(total) / len(numbers) if numbers else 0.0
 
                 return(
@@ -66,7 +66,7 @@ class TextProcessor(DataProcessor):
 
                 total_char = len(data)
                 total_word = len(data.split())
-                return(f"Processed text: {total_char} characters, {total_word}")
+                return(f"Processed text: {total_char} characters, {total_word} words")
 
         def format_output(self, result:str):
                 return result
@@ -134,7 +134,22 @@ def main()->None:
                 print(f"Processing data: {L_processor.clean_level}: {L_processor.clean_message} ")
                 print("Validation: Log every verified")
                 print(f"Ouput:{L_result}")
+        
+        print("\n=== Polymorphic Processing Demo ===")
 
+        print("Processing multiple data types through same interface...")
+        test_data = [
+            [1, 2, 3],                  
+            "Hello Nexus",              
+            "INFO: System ready"        
+        ]
+
+        all_processors: List[DataProcessor] = [NumericProcessor(), TextProcessor(), LogProcessor()]
+        test_data = [[1, 2, 3], "Hello Nexus", "ERROR: System failure"]
+
+        for i in range(len(all_processors)):
+            res = all_processors[i].process(test_data[i])
+            print(f"Result {i+1}: {res}")
 
 if __name__ =="__main__":
         main()
